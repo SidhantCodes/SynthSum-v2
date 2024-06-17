@@ -4,3 +4,4 @@ python-dotenv
 fastapi
 uvicorn
 lxml_html_clean
+youtube-transcript-api
