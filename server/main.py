@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from newspaper import Article
+from youtube_transcript_api import YouTubeTranscriptApi
 from dotenv import load_dotenv
 import os
 import google.generativeai as genai
 from fastapi.middleware.cors import CORSMiddleware
-from models import ArticleURL
+from models import ArticleURL, YoutubeVideoURL
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -19,6 +20,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.post('/summarize-video')
+async def summarize_video(url: YoutubeVideoURL):
+    url= url.url
+
+    try:
+        video_id=url.split('=')[1]
+        transcript=YouTubeTranscriptApi.get_transcript(video_id)
+        t = ""
+        for i in transcript:
+            t += " " + i["text"]
+
+        prompt="""
+            You are youtube video transcript summarizer. I will provide you with the transcript of a youtube video. Kindly summarize it for me.
+            Give me a summary section and a key points section in the summary.
+        """
+        model=genai.GenerativeModel("gemini-1.5-flash")
+        res=model.generate_content(prompt+" "+t)
+        return {"summary": res.text}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post('/summarize-article')
 async def summarize_article(url: ArticleURL):
