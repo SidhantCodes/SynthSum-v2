@@ -32,8 +32,7 @@ async def summarize_video(url: YoutubeVideoURL):
             t += " " + i["text"]
 
         prompt="""
-            You are youtube video transcript summarizer. I will provide you with the transcript of a youtube video. Kindly summarize it for me.
-            Give me a summary section and a key points section in the summary.
+            You are youtube video transcript summarizer. I will provide you with the transcript of a youtube video. Kindly summarize it for me.I need you to give me a summary section, then important points in a Key Points section and finally a conclusion section. Give me a JSON response
         """
         model=genai.GenerativeModel("gemini-1.5-flash")
         res=model.generate_content(prompt+" "+t)
@@ -53,7 +52,7 @@ async def summarize_article(url: ArticleURL):
         article_txt=article.text
 
         prompt="""
-            You are article summarizer. I will provide you with some text content from an article. Kindly summarize it for me. I need you to give me a summary section, then important points in a Key Points section and finally a conclusion section.
+            You are article summarizer. I will provide you with some text content from an article. Kindly summarize it for me. I need you to give me a summary section, then important points in a Key Points section and finally a conclusion section. Give me a JSON response
         """
 
         model=genai.GenerativeModel("gemini-1.5-flash")
