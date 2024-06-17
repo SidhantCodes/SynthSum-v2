@@ -21,7 +21,7 @@ const InputLink = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.post(`http://localhost:8000${endpoint}`, { url: link });
+      const res = await axios.post(`https://synthsum-api.onrender.com${endpoint}`, { url: link });
       setResponse(res.data.summary);
       console.log('Response:', res.data.summary); // Debugging response
     } catch (err) {
